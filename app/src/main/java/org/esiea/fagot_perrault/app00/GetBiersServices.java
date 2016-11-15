@@ -3,6 +3,7 @@ package org.esiea.fagot_perrault.app00;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.File;
@@ -70,13 +71,14 @@ public class GetBiersServices extends IntentService {
             if (HttpURLConnection.HTTP_OK == conn.getResponseCode()) {
                 copyInputStreamToFile(conn.getInputStream(), new File(getCacheDir(), "bieres.json"));
                 Log.d(TAG, "Bieres json downloaded !");
+                LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(MainActivity.BIERS_UPDATE));
             }
             else{
                 Log.w(TAG,"erreur"+conn.getResponseCode());
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        }  catch(IOException e) {
             e.printStackTrace();
         }
     }
